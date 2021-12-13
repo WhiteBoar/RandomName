@@ -147,6 +147,16 @@ def plot_return_mult_stocks(investment, stock_df):
     plt.grid(True)
     plt.show()
 
+def get_stock_mean_std_dev(stock_df, ticker):
+    return stock_df[ticker].mean(), stock_df[ticker].std()
+
+def get_mult_stock_mean_std_dev(stock_df):
+    for stock in stock_df:
+        mean, sd = get_stock_mean_std_dev(stock_df,stock)
+        cov = sd/mean
+        print("stock: {:4} Mean {:7.2f} tandard deviation: {:2.2f}".format(stock,mean,sd))
+        print("coeff of variation:{}\n".format(cov))
+
 
 
 
@@ -166,5 +176,5 @@ tickers = ['AAPL','GOOG','NFLX','FB','TSLA']
 
 download_multiple_stocks(2017,1,1,2021,1,1,tickers)
 mult_df = merge_df_by_column_name('Adj Close', 2017,1,1,2021,1,1,tickers)
-plot_return_mult_stocks(100, mult_df)
-print("wtf")
+#plot_return_mult_stocks(100, mult_df)
+get_mult_stock_mean_std_dev(mult_df)

@@ -29,13 +29,7 @@ def save_to_csv_from_yahoo(folder, ticker, syear, smonth, sday, eyear, emonth, e
 
 
 
-# def get_df_from_csv(ticker):
-#     try:
-#         df = pd.read_csv('C:/Users/KarolUrbanski/OneDrive - northvolt.com/Documents/Finance Python/Finance2' + ticker + '.csv')
-#     except FileNotFoundError:
-#         print("file not found")
-#     else:
-#         return df
+
 
 def get_stock_and_df_from_csv(folder,ticker):
     try:

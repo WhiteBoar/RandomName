@@ -20,6 +20,10 @@ def save_to_csv_from_yahoo(ticker, syear, smonth, sday, eyear, emonth, eday):
     df.to_csv('C:/Users/KarolUrbanski/OneDrive - northvolt.com/Documents/Finance Python/' + ticker + '.csv')
     return df
 
+#hold stocks not downloaded
+stock_not_downloaded = []
+missing_stocks = []
+
 
 def get_df_from_csv(ticker):
     try:

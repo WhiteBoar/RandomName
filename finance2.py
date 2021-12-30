@@ -72,16 +72,14 @@ for x in range (500):
 print("finished")
 
 
-for x in stock_not_downloaded:
-    save_to_csv_from_yahoo(folder,x,2017,1,1,2021,1,1)
-print("done")
-print(stock_not_downloaded)
+# for x in stock_not_downloaded:
+#     save_to_csv_from_yahoo(folder,x,2017,1,1,2021,1,1)
+# print("done")
+# print(stock_not_downloaded)
 
-files = [x for x in listdir(folder) if isfile(join(folder, x))]
+files = [x for x in os.listdir(folder) if os.path.isfile(os.path.join(folder, x))]
 
 # Remove extension from file names
 # Splitext splits the file name into 2 parts being the name and extension
 # We say get all file names and then store just the name in our list named files
 tickers = [os.path.splitext(x)[0] for x in files]
-tickers
-

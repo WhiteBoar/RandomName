@@ -40,3 +40,42 @@ def get_df_from_csv(ticker):
 def save_df_to_csv(df, ticker):
     df.to_csv(PATH + ticker + '.csv')
 
+#delete unnamed columns
+def delete_unnamed_columns(df):
+    df = df.loc[:,~df.columns.str.contains('^Unnamed')]
+    return df
+
+#add daily return to dataframe
+def add_daily_return_to_df(df, ticker):
+    df['daily_return'] = (df['Adj Close']/df['Adj Close'].shift(1)) -1
+    df.to_csv(PATH + ticker + '.csv')
+    return df
+
+#calculate investmen over time (investment return without initial investment)
+def get_roi_defned_time(df):
+    df['Date'] = pd.to_datetime(df['Date'])
+    start_val = df[df['Date'] == S_DATE_STR]['Adj Close'][0]
+    end_val = df[df['Date'] == E_DATE_STR]['Adj Close'][0]
+    print("Initial Price:", start_val)
+    print("Final Price", end_val)
+    roi = (end_val - start_val) / start_val
+    return roi
+#coefficient variation to check for risk
+def get_cov(df):
+    mean = stock_df['Adj Close'].mean()
+    sd = stock_df['Adj Close'].std()
+    cov = sd/mean
+    return cov
+
+# print(tickers[686])
+# stock_a = get_df_from_csv(tickers[686])
+# add_daily_return_to_df(stock_a,tickers[686])
+# stock_a = delete_unnamed_columns(stock_a)
+# save_df_to_csv(stock_a, tickers[686])
+
+for ticker in tickers:
+    print("Working on:", ticker)
+    stock_df = get_df_from_csv(ticker)
+    add_daily_return_to_df(stock_df,ticker)
+    stock_df = delete_unnamed_columns(stock_df)
+    save_df_to_csv(stock_df, ticker)

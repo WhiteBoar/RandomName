@@ -60,6 +60,7 @@ def get_roi_defned_time(df):
     print("Final Price", end_val)
     roi = (end_val - start_val) / start_val
     return roi
+
 #coefficient variation to check for risk
 def get_cov(df):
     mean = stock_df['Adj Close'].mean()
@@ -79,3 +80,44 @@ for ticker in tickers:
     add_daily_return_to_df(stock_df,ticker)
     stock_df = delete_unnamed_columns(stock_df)
     save_df_to_csv(stock_df, ticker)
+
+def get_valid_dates(df, sdate, edate):
+    try:
+        mask = (df['Date'] > sdate) & (df['Date'] <= edate)
+        sm_df = df.loc[mask]
+        sm_df = sm_df.set_index(['Date'])
+        sm_date = sm_df.index.min()
+        last_date = sm_df.index.max()
+
+        date_leading = '-'.join(('0' if len(x) < 2 else '')+x for x in sm_date.split('-'))
+        date_ending = '-'.join(('0' if len(x) < 2 else '') + x for x in last_date.split('-'))
+    except Exception:
+        print("Date corrupted")
+    else:
+        return date_leading, date_ending
+
+
+def roi_between_dates(df, sdate, edate):
+    try:
+        start_val = df.loc[sdate, 'Adj Close']
+        end_val = df.loc[edate, 'Adj Close']
+        roi = ((end_val-start_val) / start_val)
+    except Exception:
+        print("data corrupted")
+
+
+
+def get_mean_between_dates(df,sdate,edate):
+    mask = (df['Date'] > sdate) & (df['Date'] <= edate)
+    return df.loc[mask]['Adj Close'].mean()
+
+def get_stdev_between_dates(df,sdate,edate):
+    mask = (df['Date'] > sdate) & (df['Date'] <= edate)
+    return df.loc[mask]['Adj Close'].std()
+
+def get_cov_between_dates(df,sdate,edate):
+    mean = get_mean_between_dates(df,sdate,edate)
+    sd = get_stdev_between_dates(df,sdate,edate)
+    cov = sd/mean
+    return cov
+

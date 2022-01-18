@@ -68,18 +68,13 @@ def get_cov(df):
     cov = sd/mean
     return cov
 
-# print(tickers[686])
-# stock_a = get_df_from_csv(tickers[686])
-# add_daily_return_to_df(stock_a,tickers[686])
-# stock_a = delete_unnamed_columns(stock_a)
-# save_df_to_csv(stock_a, tickers[686])
 
-for ticker in tickers:
-    print("Working on:", ticker)
-    stock_df = get_df_from_csv(ticker)
-    add_daily_return_to_df(stock_df,ticker)
-    stock_df = delete_unnamed_columns(stock_df)
-    save_df_to_csv(stock_df, ticker)
+# for ticker in tickers:
+#     print("Working on:", ticker)
+#     stock_df = get_df_from_csv(ticker)
+#     add_daily_return_to_df(stock_df,ticker)
+#     stock_df = delete_unnamed_columns(stock_df)
+#     save_df_to_csv(stock_df, ticker)
 
 def get_valid_dates(df, sdate, edate):
     try:
@@ -104,6 +99,8 @@ def roi_between_dates(df, sdate, edate):
         roi = ((end_val-start_val) / start_val)
     except Exception:
         print("data corrupted")
+    else:
+        return roi
 
 
 
@@ -121,3 +118,28 @@ def get_cov_between_dates(df,sdate,edate):
     cov = sd/mean
     return cov
 
+# print(tickers[1])
+# stock_a = get_df_from_csv(tickers[1])
+# print(get_valid_dates(stock_a, '2020-01-01','2020-12-31'))
+# sdate,edate = get_valid_dates(stock_a, '2020-01-01','2020-12-31')
+# print("Adj Close Mean: ", get_mean_between_dates(stock_a,sdate,edate))
+# print("Adj Std Dev : ", get_stdev_between_dates(stock_a,sdate,edate))
+#
+# print("Adj Coefficient : ", get_cov_between_dates(stock_a,sdate,edate))
+# stock_a = stock_a.set_index(['Date'])
+# print("return on investment: ", roi_between_dates(stock_a,sdate,edate))
+
+def get_cov_ror(tickers,sdate,edate):
+    col_names = ["Ticker","COV","ROI"]
+    df = pd.DataFrame(columns= col_names)
+    for ticker in tickers:
+        print("Working on: ", ticker)
+        s_df = get_df_from_csv(ticker)
+        sdate, edate  = get_valid_dates(s_df,sdate,edate)
+        cov = get_cov_between_dates(s_df,sdate,edate)
+        s_df = s_df.set_index(['Date'])
+        roi = roi_between_dates(s_df,sdate,edate)
+        df.loc[len(df.index)] = [ticker,cov,roi]
+    return df
+
+market_df = get_cov_ror(tickers,'2019-01-01','2019-12-31')
